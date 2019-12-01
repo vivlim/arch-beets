@@ -22,7 +22,7 @@ RUN pacman -Syu --noconfirm \
 # delete user's password so sudo won't prompt for it
   && passwd -d vivlim \
 # basic tools
-  && pacman -S vim git zsh base-devel man-db tmux vi base iputils inotify-tools python-pipenv youtube-dl --noconfirm \
+  && pacman -S vim git zsh base-devel man-db tmux vi base iputils inotify-tools python-pipenv youtube-dl beets --noconfirm \
 # install an aur helper
   && cd /tmp \
   && git clone https://aur.archlinux.org/yay.git \
