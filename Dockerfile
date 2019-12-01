@@ -22,7 +22,7 @@ RUN pacman -Syu --noconfirm \
 # delete user's password so sudo won't prompt for it
   && passwd -d vivlim \
 # basic tools
-  && pacman -S vim git zsh base-devel man-db tmux vi --noconfirm \
+  && pacman -S vim git zsh base-devel man-db tmux vi base iputils inotify-tools python-pipenv youtube-dl --noconfirm \
 # install an aur helper
   && cd /tmp \
   && git clone https://aur.archlinux.org/yay.git \
@@ -43,14 +43,6 @@ RUN su vivlim -c "yay -S --noconfirm --cleanafter vcsh myrepos"
 
 # remove .zshrc because the config will overwrite it.
 RUN rm /home/vivlim/.zshrc
-
-# Install languages: python, js, rust, elixir
-RUN pacman --noconfirm -Sy npm python-pipenv elixir \
-  && pacman -Scc --noconfirm
-
-# patch on some more packages I forgot to add before (if rebuilding, merge up!)
-RUN pacman --noconfirm -Sy base iputils inotify-tools \
-  && pacman -Scc --noconfirm
 
 COPY launch.sh /launch.sh
 COPY user_launch.sh /user_launch.sh
