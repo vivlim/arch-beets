@@ -22,7 +22,7 @@ RUN pacman -Syu --noconfirm \
 # delete user's password so sudo won't prompt for it
   && passwd -d vivlim \
 # basic tools
-  && pacman -S vim git zsh base-devel man-db tmux vi base iputils inotify-tools python-pipenv youtube-dl beets --noconfirm \
+  && pacman -S vim git zsh base-devel man-db tmux vi base iputils inotify-tools python-pipenv youtube-dl ffmpeg npm beets --noconfirm \
 # install an aur helper
   && cd /tmp \
   && git clone https://aur.archlinux.org/yay.git \
@@ -33,6 +33,11 @@ RUN pacman -Syu --noconfirm \
   && rm -rf /tmp/yay \
 # clean cache
   && pacman -Scc --noconfirm
+
+RUN npm install -g cloudcmd
+
+# installing gritty requires root
+RUN npm install -g gritty --unsafe
 
 # oh-my-zsh
 RUN su vivlim -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh) --unattended" \

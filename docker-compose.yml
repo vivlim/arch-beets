@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
     arch:
         build: .
@@ -15,9 +15,18 @@ services:
           - ./beets:/home/vivlim/.config/beets
           - home:/home/vivlim
           - ssh_server_keys:/etc/ssh/keys
+          - 
+            type: bind
+            source: "/net/192.168.1.107/depths"
+            target: "/home/vivlim/depths"
+            read_only: true
+            bind:
+                propagation: rshared
         restart: unless-stopped
         ports:
           - "8322:22"
+        networks:
+          - frontend
     ampache:
         image: jgoerzen/ampache-mysql
         container_name: ampache
@@ -40,6 +49,36 @@ services:
           - "8932:80"
         environment:
           - DEBBASE_NO_STARTUP_APT=yes
+    supysonic:
+      image: 'speranza/supysonic-pg'
+      container_name: 'supysonic'
+      restart: 'unless-stopped'
+      networks:
+        - frontend
+        - backend
+      environment:
+        - PUID=1000
+        - PGID=1000
+      volumes:
+        - './supysonic.conf:/etc/supysonic'
+        - '/mnt/big/vivlim/beets-library:/media'
+      ports:
+        - 8000:8000
+    postgres:
+      image: postgres:10.5
+      container_name: supysonic_postgres
+      hostname: supysonic_postgres
+      restart: always
+      networks:
+        - backend
+      volumes:
+        - ./supysonic_pg/data:/var/lib/postgresql/data
+        - ./supysonic_pg/postgres.conf:/etc/postgres.conf
+        - ./supysonic_pg/pg_hba.conf:/etc/pg_hba.conf
+      command: postgres -c config_file=/etc/postgres.conf
+      environment:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
 
 volumes:
     ssh_server_keys:
@@ -50,3 +89,4 @@ networks:
     frontend:
         external:
             name: ingress_frontend
+    backend:

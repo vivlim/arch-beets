@@ -22,3 +22,6 @@ if [ $? == 0 ]; then
   echo "No password is set. You will be prompted for one when you connect."
   tmux send-keys -t 1 "passwd vivlim" C-m
 fi
+
+# start cloudcmd
+cloudcmd --terminal --terminal-path `gritty --path` &
